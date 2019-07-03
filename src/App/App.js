@@ -16,7 +16,7 @@ class App extends Component {
         folders: []
     };
     
-    
+
     componentDidMount() {
         fetch(`http://localhost:9090/notes`)
         .then(res => {
@@ -27,7 +27,7 @@ class App extends Component {
         })          
         .then(data => {
             console.log(data)
-            this.setState(data)
+            this.setState({notes: data})
         })
         .catch(error => {
             console.error(error)
@@ -42,7 +42,7 @@ class App extends Component {
             })          
             .then(data => {
                 console.log(data)
-                this.setState(data)
+                this.setState({folders: data})
             })
             .catch(error => {
                 console.error(error)
