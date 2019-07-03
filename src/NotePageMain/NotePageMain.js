@@ -1,8 +1,11 @@
 import React from 'react'
 import Note from '../Note/Note'
+//import UserContext from '../UserContext'
 import './NotePageMain.css'
 
-export default function NotePageMain(props) {
+export default function NotePageMain (props){
+  //static contextType = UserContext;
+  //render() {
   return (
     <section className='NotePageMain'>
       <Note
