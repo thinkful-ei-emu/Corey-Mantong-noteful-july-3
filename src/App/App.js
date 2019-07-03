@@ -6,7 +6,7 @@ import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
-import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
+import {getNotesForFolder, findNote} from '../notes-helpers';
 import UserContext from '../UserContext'
 import './App.css';
 
@@ -17,32 +17,44 @@ class App extends Component {
     };
     
     
-
     componentDidMount() {
-      fetch(`http://localhost:9090/${folders}`,{
-       method: 'GET',
-       headers:{
-        'content-type': 'application/json' 
-       }
-    })
-        .then(res=>{
-          if(!res.ok){
-              return res.json().then(error=> {
-                  throw error
-              })
+        fetch(`http://localhost:9090/notes`)
+        .then(res => {
+            if(!res.ok){
+                throw new Error('Something went wrong')
             }
-        })     
-                
-        .then(data=>{
-          console.log(data);
-      });
+        return res.json()
+        })          
+        .then(data => {
+            console.log(data)
+            this.setState(data)
+        })
+        .catch(error => {
+            console.error(error)
+        })
+
+            fetch(`http://localhost:9090/folders`)
+            .then(res => {
+                if(!res.ok){
+                    throw new Error('Something went wrong')
+                }
+            return res.json()
+            })          
+            .then(data => {
+                console.log(data)
+                this.setState(data)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+            
         // fake date loading from API call
         setTimeout(() => this.setState(dummyStore), 600);
     }
 
     renderNavRoutes() {
       
-        const {notes, folders} = this.state;
+        // const {notes, folders} = this.state;
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -50,25 +62,10 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        render={routeProps => (
-                            <NoteListNav
-                                folders={folders}
-                                notes={notes}
-                                {...routeProps}
-                            />
-                        )}
+                        component={NoteListNav}
                     />
                 ))}
-                <Route
-                    path="/note/:noteId"
-                    // render={routeProps => {
-                    //     const {noteId} = routeProps.match.params;
-                    //     const note = findNote(notes, noteId) || {};
-                    //     const folder = findFolder(folders, note.folderId);
-                    //     return <NotePageNav {...routeProps} folder={folder} />;
-                    // }}
-                    component={NotePageNav}
-                />
+                <Route path="/note/:noteId"component={NotePageNav}/>
                 <Route path="/add-folder" component={NotePageNav} />
                 <Route path="/add-note" component={NotePageNav} />
             </>
@@ -84,21 +81,21 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        // render={routeProps => {
-                        //     const {folderId} = routeProps.match.params;
-                        //     const notesForFolder = getNotesForFolder(
-                        //         notes,
-                        //         folderId
-                        //     );
+                        render={routeProps => {
+                            const {folderId} = routeProps.match.params;
+                            const notesForFolder = getNotesForFolder(
+                                notes,
+                                folderId
+                            );
                             
-                        //     return (
-                        //         <NoteListMain
-                        //             {...routeProps}
-                        //             notes={notesForFolder}
-                        //         />
-                        //     );
-                        // }}
-                        component={NoteListMain}
+                            return (
+                                <NoteListMain
+                                    {...routeProps}
+                                    notes={notesForFolder}
+                                />
+                            );
+                        }}
+                        // component={NoteListMain}
                     />
                 ))}
                 <Route

@@ -3,17 +3,14 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Note from '../Note/Note'
 import CircleButton from '../CircleButton/CircleButton'
-import UserContext from '../UserContext';
 import './NoteListMain.css'
 
 
-export default class NoteListMain extends  React.Component {
-  static contextType =UserContext;
-  render(){
+export default function NoteListMain(props) {
   return (
     <section className='NoteListMain'>
       <ul>
-        {this.context.notes.map(note =>
+        {props.notes.map(note =>
           <li key={note.id}>
             <Note
               id={note.id}
@@ -37,7 +34,7 @@ export default class NoteListMain extends  React.Component {
       </div>
     </section>
   )
-}}
+}
 
 NoteListMain.defaultProps = {
   notes: [],

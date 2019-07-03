@@ -8,6 +8,7 @@ import './NoteListNav.css'
 
 class NoteListNav extends React.Component {
   static contextType = UserContext;
+
   render() {
     return (
       <div className='NoteListNav'>
@@ -43,8 +44,5 @@ class NoteListNav extends React.Component {
   }
 }
 
-NoteListNav.defaultProps = {
-  folders: []
-}
 
 export default NoteListNav;
