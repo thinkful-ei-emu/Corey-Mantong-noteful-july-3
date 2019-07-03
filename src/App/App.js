@@ -5,7 +5,7 @@ import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
-import dummyStore from '../dummy-store';
+//import dummyStore from '../dummy-store';
 import {getNotesForFolder, findNote} from '../notes-helpers';
 import UserContext from '../UserContext'
 import './App.css';
@@ -47,11 +47,17 @@ class App extends Component {
             .catch(error => {
                 console.error(error)
             })
-            
+        
+           
         // fake date loading from API call
-        setTimeout(() => this.setState(dummyStore), 600);
+        //setTimeout(() => this.setState(dummyStore), 600);
     }
-
+    handleDeleteNote = noteId => {
+        this.setState({
+            notes: this.state.notes.filter(note => note.id !== noteId)
+        });
+    };
+    
     renderNavRoutes() {
       
         // const {notes, folders} = this.state;

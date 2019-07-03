@@ -5,6 +5,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import './Note.css'
 
 export default function Note(props) {
+  //delete API call 
+  // const handleClickDelete = e => {
+  //   e.preventDefault()
+  //   const noteId = this.props.id
+
+  //   fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
+  //     method: 'DELETE',
+  //     headers: {
+  //       'content-type': 'application/json'
+  //     },
+  //   })
+  //     .then(res => {
+  //       if (!res.ok)
+  //         return res.json().then(e => Promise.reject(e))
+  //       return res.json()
+  //     })
+  //     .then(() => {
+  //       this.context.deleteNote(noteId)
+  //       // allow parent to perform extra behaviour
+  //       this.props.onDeleteNote(noteId)
+  //     })
+  //     .catch(error => {
+  //       console.error({ error })
+  //     })
+  // }
   return (
     <div className='Note'>
       <h2 className='Note__title'>
