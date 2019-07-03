@@ -7,6 +7,7 @@ import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
+import UserContext from './UserContext';
 import './App.css';
 
 class App extends Component {
@@ -68,6 +69,7 @@ class App extends Component {
                                 notes,
                                 folderId
                             );
+                            
                             return (
                                 <NoteListMain
                                     {...routeProps}
