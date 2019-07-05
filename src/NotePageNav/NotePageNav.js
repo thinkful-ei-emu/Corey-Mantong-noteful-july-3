@@ -1,10 +1,11 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CircleButton from '../CircleButton/CircleButton'
-// import UserContext from './UserContext'
+import UserContext from '../UserContext'
 import './NotePageNav.css'
 
 export default class NotePageNav extends React.Component {
+  static contextType = UserContext;
   render() {
   return (
     <div className='NotePageNav'>
@@ -18,9 +19,9 @@ export default class NotePageNav extends React.Component {
         <br />
         Back
       </CircleButton>
-      {this.props.folder && (
+      {this.context.folder && (
         <h3 className='NotePageNav__folder-name'>
-          {this.props.folder.name}
+          {this.context.folder.name}
         </h3>
       )}
     </div>
