@@ -16,12 +16,6 @@ class App extends Component {
     notes: [],
     folders: [],
   };
-  constructor(props) {
-    super(props);
-    this.state = {
-      hasError: false
-    };
-  }
   componentDidMount() {
     Promise.all([
       fetch(`${config.API_ENDPOINT}/notes`),
@@ -132,6 +126,7 @@ class App extends Component {
       addNote: this.handleAddNote,
       deleteNote: this.handleDeleteNote,
     }
+    
     return (
       <ApiContext.Provider value={value}>
         <div className='App'>

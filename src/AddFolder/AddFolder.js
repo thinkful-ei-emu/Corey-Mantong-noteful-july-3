@@ -2,6 +2,7 @@ import React from 'react';
 import NotefulForm from '../NotefulForm/NotefulForm';
 import ApiContext from '../ApiContext';
 import config from '../config';
+import Error from '../ErrorBoundaries/Error';
 import './AddFolder.css';
 
 export default class AddFolder extends React.Component{
@@ -41,6 +42,7 @@ export default class AddFolder extends React.Component{
       render() {
         return (
           <section className='AddFolder'>
+            <Error>
             <h2>Create a folder</h2>
             <NotefulForm onSubmit={this.handleSubmit}>
               <div className='field'>
@@ -55,6 +57,7 @@ export default class AddFolder extends React.Component{
                 </button>
               </div>
             </NotefulForm>
+            </Error>
           </section>
         )
       }
