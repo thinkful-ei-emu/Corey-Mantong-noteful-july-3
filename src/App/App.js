@@ -5,9 +5,8 @@ import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
-//import dummyStore from '../dummy-store';
-import {getNotesForFolder, findNote} from '../notes-helpers';
-import UserContext from '../UserContext'
+import ApiContext from '../ApiContext';
+import config from '../config';
 import './App.css';
 
 class App extends Component {
@@ -15,52 +14,35 @@ class App extends Component {
         notes: [],
         folders: []
     };
-    
 
     componentDidMount() {
-        fetch(`http://localhost:9090/notes`)
-        .then(res => {
-            if(!res.ok){
-                throw new Error('Something went wrong')
-            }
-        return res.json()
-        })          
-        .then(data => {
-            console.log(data)
-            this.setState({notes: data})
-        })
-        .catch(error => {
-            console.error(error)
-        })
+        Promise.all([
+            fetch(`${config.API_ENDPOINT}/notes`),
+            fetch(`${config.API_ENDPOINT}/folders`)
+        ])
+            .then(([notesRes, foldersRes]) => {
+                if (!notesRes.ok)
+                    return notesRes.json().then(e => Promise.reject(e));
+                if (!foldersRes.ok)
+                    return foldersRes.json().then(e => Promise.reject(e));
 
-            fetch(`http://localhost:9090/folders`)
-            .then(res => {
-                if(!res.ok){
-                    throw new Error('Something went wrong')
-                }
-            return res.json()
-            })          
-            .then(data => {
-                console.log(data)
-                this.setState({folders: data})
+                return Promise.all([notesRes.json(), foldersRes.json()]);
+            })
+            .then(([notes, folders]) => {
+                this.setState({notes, folders});
             })
             .catch(error => {
-                console.error(error)
-            })
-        
-           
-        // fake date loading from API call
-        //setTimeout(() => this.setState(dummyStore), 600);
+                console.error({error});
+            });
     }
+
     handleDeleteNote = noteId => {
         this.setState({
             notes: this.state.notes.filter(note => note.id !== noteId)
         });
     };
-    
+
     renderNavRoutes() {
-      
-        // const {notes, folders} = this.state;
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -71,7 +53,7 @@ class App extends Component {
                         component={NoteListNav}
                     />
                 ))}
-                <Route path="/note/:noteId"component={NotePageNav}/>
+                <Route path="/note/:noteId" component={NotePageNav} />
                 <Route path="/add-folder" component={NotePageNav} />
                 <Route path="/add-note" component={NotePageNav} />
             </>
@@ -79,7 +61,6 @@ class App extends Component {
     }
 
     renderMainRoutes() {
-        const {notes} = this.state;
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -87,59 +68,35 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        render={routeProps => {
-                            const {folderId} = routeProps.match.params;
-                            const notesForFolder = getNotesForFolder(
-                                notes,
-                                folderId
-                            );
-                            
-                            return (
-                                <NoteListMain
-                                    {...routeProps}
-                                    notes={notesForFolder}
-                                />
-                            );
-                        }}
-                        // component={NoteListMain}
+                        component={NoteListMain}
                     />
                 ))}
-                <Route
-                    path="/note/:noteId"
-                    render={routeProps => {
-                        const {noteId} = routeProps.match.params;
-                        const note = findNote(notes, noteId);
-                        return <NotePageMain {...routeProps} note={note} />;
-                     }}
-                    //component={NotePageMain}
-                />
+                <Route path="/note/:noteId" component={NotePageMain} />
             </>
         );
     }
 
     render() {
-        const contextValue ={
-            folders: this.state.folders,
+        const value = {
             notes: this.state.notes,
-           
-        }
+            folders: this.state.folders,
+            deleteNote: this.handleDeleteNote
+        };
         return (
-            
-            <UserContext.Provider value={contextValue}>
-            <div className="App">
-                <nav className="App__nav">{this.renderNavRoutes()}</nav>
-                <header className="App__header">
-                    <h1>
-                        <Link to="/">Noteful</Link>{' '}
-                        <FontAwesomeIcon icon="check-double" />
-                    </h1>
-                </header>
-                <main className="App__main">{this.renderMainRoutes()}</main>
-            </div>
-            </UserContext.Provider>
-
+            <ApiContext.Provider value={value}>
+                <div className="App">
+                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                    <header className="App__header">
+                        <h1>
+                            <Link to="/">Noteful</Link>{' '}
+                            <FontAwesomeIcon icon="check-double" />
+                        </h1>
+                    </header>
+                    <main className="App__main">{this.renderMainRoutes()}</main>
+                </div>
+            </ApiContext.Provider>
         );
     }
-
 }
+
 export default App;
