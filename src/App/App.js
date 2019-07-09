@@ -9,6 +9,7 @@ import AddFolder from '../AddFolder/AddFolder'
 import AddNote from '../AddNote/AddNote'
 import ApiContext from '../ApiContext'
 import config from '../config'
+import Error from '../ErrorBoundaries/Error'
 import './App.css'
 
 class App extends Component {
@@ -106,6 +107,7 @@ class App extends Component {
           path='/note/:noteId'
           component={NotePageMain}
         />
+        <Error>
         <Route
           path='/add-folder'
           component={AddFolder}
@@ -114,6 +116,7 @@ class App extends Component {
           path='/add-note'
           component={AddNote}
         />
+        </Error>
       </>
     )
   }

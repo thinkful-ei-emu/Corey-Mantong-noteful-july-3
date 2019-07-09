@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import NotefulForm from '../NotefulForm/NotefulForm'
 import ApiContext from '../ApiContext'
 import config from '../config'
-import Error from '../ErrorBoundaries/Error'
+import PropTypes from 'prop-types';
 import './AddNote.css'
 
 export default class AddNote extends Component {
@@ -46,7 +46,7 @@ export default class AddNote extends Component {
     const { folders=[] } = this.context
     return (
       <section className='AddNote'>
-        <Error>
+        
         <h2>Create a note</h2>
         <NotefulForm onSubmit={this.handleSubmit}>
           <div className='field'>
@@ -80,8 +80,18 @@ export default class AddNote extends Component {
             </button>
           </div>
         </NotefulForm>
-        </Error>
+        
       </section>
     )
   }
+}
+AddNote.defaultProps = {
+  name: '',
+  content:'',
+  folder:''
+};
+AddNote.propTypes ={
+  name: PropTypes.string.isRequired,
+  content:PropTypes.string.isRequired,
+  folder:PropTypes.string.isRequired
 }
